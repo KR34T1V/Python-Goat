@@ -28,12 +28,12 @@ class NewVisitorTest(unittest.TestCase):
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
         
+        # The page updates and now lists "get tomatoes" as a item in the to-do list.
         table = self.browser.find_element_by_id('id_list_table')
         row = table.find_elements_by_tag_name('tr')
         self.assertTrue(
             any(row.text == '1: Get Fresh Tomatoes' for rows in rows)
         )
-        # The page updates and now lists "get tomatoes" as a item in the to-do list.
         # Below that there is an empty text box inviting him to add another item to the list.
         # He enters "prepare tomatoes". Tom has a pretty bland diet.
         # The page updates again and now displays "get tomatoes" & "prepare tomatoes" as to-do list items.

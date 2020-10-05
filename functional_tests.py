@@ -10,6 +10,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Tom goes to view a new to-do list website. He lands on the homepage.
         self.browser.get('http://localhost:8000')
@@ -23,26 +28,24 @@ class NewVisitorTest(unittest.TestCase):
         self.assertEqual(
             input_box.get_attribute('placeholder'), 'Enter a to-do item'
         )
-        # He types in "Get Fresh Tomatoes" as his first entry and presses enter.
+        # He types in "Get Fresh Tomatoes" as his first entry and presses Enter.
         input_box.send_keys('Get Fresh Tomatoes')
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
         
         # The page updates and now lists "Get Fresh Tomatoes" as a item in the to-do list.
-        table = self.browser.find_element_by_id('id_list_table')
-        row = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Get Fresh Tomatoes', [row.text for row in row])
+        self.check_for_row_in_list_table('1: Get Fresh Tomatoes')
 
         # Below that there is an empty text box inviting him to add another item to the list.
         # He enters "Prepare Fresh Tomatoes". Tom has a pretty bland diet.
+        input_box = self.browser.find_element_by_id('id_new_item')
         input_box.send_keys('Prepare Fresh Tomatoes')
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
 
         # The page updates again and now displays "Get Fresh Tomatoes" & "Prepare Fresh Tomatoes" as to-do list items.
-        table = self.browser.find_element_by_id('id_list_table')
-        row = table.find_elements_by_tag_name('tr')
-        self.assertIn('2: Prepare Fresh Tomatoes', [row.text for row in row])
+        self.check_for_row_in_list_table('1: Get Fresh Tomatoes')
+        self.check_for_row_in_list_table('2: Prepare Fresh Tomatoes')
         
         # Of course there is another empty text box to add more items to the list.
         # Tom is afraid to close the page, for fear of losing his list.

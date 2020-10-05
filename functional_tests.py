@@ -32,7 +32,8 @@ class NewVisitorTest(unittest.TestCase):
         table = self.browser.find_element_by_id('id_list_table')
         row = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any(row.text == '1: Get Fresh Tomatoes' for rows in rows)
+            any(row.text == '1: Get Fresh Tomatoes' for row in row),
+            "New to-do item did not appear in table"
         )
         # Below that there is an empty text box inviting him to add another item to the list.
         # He enters "prepare tomatoes". Tom has a pretty bland diet.

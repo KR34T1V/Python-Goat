@@ -28,16 +28,22 @@ class NewVisitorTest(unittest.TestCase):
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
         
-        # The page updates and now lists "get tomatoes" as a item in the to-do list.
+        # The page updates and now lists "Get Fresh Tomatoes" as a item in the to-do list.
         table = self.browser.find_element_by_id('id_list_table')
         row = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Get Fresh Tomatoes' for row in row),
-            "New to-do item did not appear in table"
-        )
+        self.assertIn('1: Get Fresh Tomatoes', [row.text for row in row])
+
         # Below that there is an empty text box inviting him to add another item to the list.
-        # He enters "prepare tomatoes". Tom has a pretty bland diet.
-        # The page updates again and now displays "get tomatoes" & "prepare tomatoes" as to-do list items.
+        # He enters "Prepare Fresh Tomatoes". Tom has a pretty bland diet.
+        input_box.send_keys('Prepare Fresh Tomatoes')
+        input_box.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # The page updates again and now displays "Get Fresh Tomatoes" & "Prepare Fresh Tomatoes" as to-do list items.
+        table = self.browser.find_element_by_id('id_list_table')
+        row = table.find_elements_by_tag_name('tr')
+        self.assertIn('2: Prepare Fresh Tomatoes', [row.text for row in row])
+        
         # Of course there is another empty text box to add more items to the list.
         # Tom is afraid to close the page, for fear of losing his list.
         # Then he notices a button that allows him to generate a unique URL for his list. --there is some text explaining it.
